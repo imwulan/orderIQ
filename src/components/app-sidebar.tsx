@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Sparkles, ListOrdered, Lightbulb, Settings, Flame } from "lucide-react";
+import { LayoutDashboard, Sparkles, ListOrdered, Lightbulb, Settings, Flame, Gavel } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,10 +14,10 @@ import {
 
 const items = [
   { title: "Dashboard", url: "/app", icon: LayoutDashboard, exact: true },
-  { title: "Analyze Chat", url: "/app/analyze", icon: Sparkles },
-  { title: "Orders", url: "/app/orders", icon: ListOrdered },
-  { title: "Insights", url: "/app/insights", icon: Lightbulb },
-  { title: "Settings", url: "/app/settings", icon: Settings },
+  { title: "Analisis Chat", url: "/app/analyze", icon: Sparkles },
+  { title: "Pesanan", url: "/app/orders", icon: ListOrdered },
+  { title: "Insight Bisnis", url: "/app/insights", icon: Lightbulb },
+  { title: "Pengaturan", url: "/app/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -54,6 +54,14 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 );
               })}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Demo Juri">
+                  <Link to="/judge-demo">
+                    <Gavel className="h-4 w-4" />
+                    <span>Demo Juri</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

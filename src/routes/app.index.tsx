@@ -104,8 +104,8 @@ function Dashboard() {
           </p>
         </div>
         <Button asChild>
-          <Link to="/app/analyze">
-            <Sparkles className="mr-1.5 h-4 w-4" /> Analyze new chat
+          <Link to="/analyze">
+            <Sparkles className="mr-1.5 h-4 w-4" /> Analisis Chat Baru
           </Link>
         </Button>
       </div>

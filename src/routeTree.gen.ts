@@ -9,7 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as JudgeDemoRouteImport } from './routes/judge-demo'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
@@ -17,9 +20,24 @@ import { Route as AppOrdersRouteImport } from './routes/app.orders'
 import { Route as AppInsightsRouteImport } from './routes/app.insights'
 import { Route as AppAnalyzeRouteImport } from './routes/app.analyze'
 
+const JudgeDemoRoute = JudgeDemoRouteImport.update({
+  id: '/judge-demo',
+  path: '/judge-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyzeRoute = AnalyzeRouteImport.update({
+  id: '/analyze',
+  path: '/analyze',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -55,7 +73,10 @@ const AppAnalyzeRoute = AppAnalyzeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
   '/app': typeof AppRouteWithChildren
+  '/demo': typeof DemoRoute
+  '/judge-demo': typeof JudgeDemoRoute
   '/app/analyze': typeof AppAnalyzeRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/orders': typeof AppOrdersRoute
@@ -64,6 +85,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
+  '/demo': typeof DemoRoute
+  '/judge-demo': typeof JudgeDemoRoute
   '/app/analyze': typeof AppAnalyzeRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/orders': typeof AppOrdersRoute
@@ -73,7 +97,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
   '/app': typeof AppRouteWithChildren
+  '/demo': typeof DemoRoute
+  '/judge-demo': typeof JudgeDemoRoute
   '/app/analyze': typeof AppAnalyzeRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/orders': typeof AppOrdersRoute
@@ -84,7 +111,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/analyze'
     | '/app'
+    | '/demo'
+    | '/judge-demo'
     | '/app/analyze'
     | '/app/insights'
     | '/app/orders'
@@ -93,6 +123,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/analyze'
+    | '/demo'
+    | '/judge-demo'
     | '/app/analyze'
     | '/app/insights'
     | '/app/orders'
@@ -101,7 +134,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/analyze'
     | '/app'
+    | '/demo'
+    | '/judge-demo'
     | '/app/analyze'
     | '/app/insights'
     | '/app/orders'
@@ -111,16 +147,40 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyzeRoute: typeof AnalyzeRoute
   AppRoute: typeof AppRouteWithChildren
+  DemoRoute: typeof DemoRoute
+  JudgeDemoRoute: typeof JudgeDemoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/judge-demo': {
+      id: '/judge-demo'
+      path: '/judge-demo'
+      fullPath: '/judge-demo'
+      preLoaderRoute: typeof JudgeDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analyze': {
+      id: '/analyze'
+      path: '/analyze'
+      fullPath: '/analyze'
+      preLoaderRoute: typeof AnalyzeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -188,8 +248,21 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyzeRoute: AnalyzeRoute,
   AppRoute: AppRouteWithChildren,
+  DemoRoute: DemoRoute,
+  JudgeDemoRoute: JudgeDemoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
